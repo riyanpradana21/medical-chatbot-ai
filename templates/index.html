@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SobatSehat AI</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Ion Icons -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <style>
+      :root {
+        --primary: #1d4ed8;
+        --primary-light: #3b82f6;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --text-soft: #64748b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        height: 100vh;
+      }
+
+      /* Layout */
+      .layout {
+        display: flex;
+        height: 100vh;
+      }
+
+      /* Sidebar Layout */
+      .sidebar {
+        width: 260px;
+        background: #ffffff;
+        border-right: 1px solid #e5e7eb;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      /* Title */
+      .sidebar-title {
+        font-weight: 700;
+        font-size: 14px;
+        color: #111827;
+        text-transform: lowercase;
+      }
+
+      /* New Chat Button */
+      .new-chat-btn {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .new-chat-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+      }
+
+      /* Plus Icon Box */
+      .plus-box {
+        width: 26px;
+        height: 26px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .plus-box ion-icon {
+        font-size: 16px;
+        color: white;
+      }
+
+      /* History List */
+      .history-list {
+        margin-top: 20px;
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      /* History Item */
+      .history-item {
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        color: #374151;
+        transition: 0.2s;
+      }
+
+      .history-item:hover {
+        background: #f3f4f6;
+      }
+
+      /* Footer */
+      .sidebar-footer {
+        padding-top: 12px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      /* Delete Button */
+      .delete-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: none;
+        color: #ef4444;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .delete-btn:hover {
+        color: #dc2626;
+      }
+
+      /* Chat Area */
+      .app {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: white;
+      }
+
+      /* Header */
+      .header {
+        background: var(--primary);
+        color: white;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .menu-btn {
+        display: none;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo img {
+        width: 22px;
+      }
+
+      .header-text h1 {
+        font-size: 15px;
+      }
+
+      .header-text p {
+        font-size: 11px;
+        opacity: 0.8;
+      }
+
+      /* Chat */
+      .chat-container {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: #f9fbfd;
+      }
+
+      .message-wrapper {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+      }
+
+      .message {
+        max-width: 70%;
+        padding: 10px 14px;
+        border-radius: 14px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .user {
+        background: var(--primary-light);
+        color: white;
+      }
+
+      .bot {
+        background: white;
+        border: 1px solid var(--border);
+      }
+
+      .icon-box {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .icon-user {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      }
+
+      .icon-bot {
+        background: linear-gradient(135deg, #14b8a6, #0d9488);
+      }
+
+      .icon-box ion-icon {
+        color: white;
+        font-size: 18px;
+      }
+
+      /* Input */
+      .input-container {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        border-top: 1px solid var(--border);
+      }
+
+      .input-container input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+
+      .input-container button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s ease;
+        z-index: 90;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          left: -260px;
+          top: 0;
+          height: 100%;
+          z-index: 100;
+          transition: left 0.3s ease;
+        }
+
+        .sidebar.active {
+          left: 0;
+        }
+
+        .menu-btn {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="layout">
+      <div class="sidebar" id="sidebar">
+        <!-- Header -->
+        <div class="sidebar-header">
+          <span class="sidebar-title">Riwayat Chat</span>
+        </div>
+
+        <!-- New Chat Button -->
+        <button class="new-chat-btn" onclick="createNewChat()">
+          <span class="plus-box">
+            <ion-icon name="add-outline"></ion-icon>
+          </span>
+          New Chat
+        </button>
+
+        <!-- History List -->
+        <div id="historyList" class="history-list"></div>
+
+        <!-- Footer -->
+        <div class="sidebar-footer">
+          <button class="delete-btn" onclick="clearHistory()">
+            <ion-icon name="trash-outline"></ion-icon>
+            Hapus Riwayat
+          </button>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+      <div class="app">
+        <div class="header">
+          <ion-icon
+            name="menu"
+            class="menu-btn"
+            onclick="toggleSidebar()"
+          ></ion-icon>
+          <div class="logo">
+            <img src="/static/streamline_health-care-2-solid.png" />
+          </div>
+          <div class="header-text">
+            <h1>SobatSehat AI</h1>
+            <p>Asisten Kesehatan Digital</p>
+          </div>
+        </div>
+
+        <div id="chatContainer" class="chat-container"></div>
+
+        <div class="input-container">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Tulis keluhan Anda..."
+          />
+          <button onclick="sendMessage()">
+            <ion-icon name="send-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let sessions =
+        JSON.parse(localStorage.getItem("sobatsehat_sessions")) || [];
+      let currentSession = null;
+
+      const chatContainer = document.getElementById("chatContainer");
+      const historyList = document.getElementById("historyList");
+
+      function createNewSession() {
+        const id = Date.now();
+        const session = { id, messages: [] };
+        sessions.push(session);
+        currentSession = session;
+        saveSessions();
+        renderHistory();
+      }
+
+      function createNewChat() {
+        alert("New chat dibuat!");
+        // kosongkan chat area / reset state
+      }
+
+      function clearHistory() {
+        if (confirm("Yakin ingin menghapus semua riwayat?")) {
+          document.getElementById("historyList").innerHTML = "";
+        }
+      }
+
+      function renderHistory() {
+        historyList.innerHTML = "";
+        sessions.forEach((s) => {
+          const item = document.createElement("div");
+          item.className = "history-item";
+          item.innerText = "Chat " + s.id;
+          item.onclick = () => {
+            loadSession(s.id);
+            closeSidebar(); // auto close di mobile
+          };
+          historyList.appendChild(item);
+        });
+      }
+
+      function loadSession(id) {
+        currentSession = sessions.find((s) => s.id === id);
+        renderMessages();
+      }
+
+      function saveSessions() {
+        localStorage.setItem("sobatsehat_sessions", JSON.stringify(sessions));
+      }
+
+      function renderMessages() {
+        chatContainer.innerHTML = "";
+        if (!currentSession) return;
+
+        currentSession.messages.forEach((msg) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "message-wrapper";
+
+          const iconBox = document.createElement("div");
+          iconBox.className =
+            "icon-box " + (msg.sender === "user" ? "icon-user" : "icon-bot");
+
+          const icon = document.createElement("ion-icon");
+          icon.setAttribute(
+            "name",
+            msg.sender === "user" ? "person-outline" : "medkit-outline",
+          );
+
+          iconBox.appendChild(icon);
+
+          const messageDiv = document.createElement("div");
+          messageDiv.className = `message ${msg.sender}`;
+          messageDiv.innerText = msg.text;
+
+          if (msg.sender === "user") {
+            wrapper.style.justifyContent = "flex-end";
+            wrapper.appendChild(messageDiv);
+            wrapper.appendChild(iconBox);
+          } else {
+            wrapper.appendChild(iconBox);
+            wrapper.appendChild(messageDiv);
+          }
+
+          chatContainer.appendChild(wrapper);
+        });
+
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const text = input.value.trim();
+        if (!text) return;
+
+        if (!currentSession) createNewSession();
+
+        currentSession.messages.push({ sender: "user", text });
+        renderMessages();
+        saveSessions();
+        input.value = "";
+
+        // Auto greeting response
+        if (isGreeting(text)) {
+          const greetingReply =
+            "Halo 👋\n\nSelamat datang di SobatSehat AI.\n\nSilakan ceritakan keluhan atau gejala yang Anda rasakan, dan saya akan membantu memberikan informasi kesehatan awal.\n\nJika kondisi darurat, segera hubungi fasilitas kesehatan terdekat.";
+
+          currentSession.messages.push({ sender: "bot", text: greetingReply });
+          renderMessages();
+          saveSessions();
+          return;
+        }
+
+        const response = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+        });
+
+        const data = await response.json();
+
+        currentSession.messages.push({ sender: "bot", text: data.reply });
+        renderMessages();
+        saveSessions();
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+      }
+
+      function closeSidebar() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      }
+
+      function isGreeting(text) {
+        const greetings = ["halo", "hallo", "hi", "hai", "hello"];
+        return greetings.includes(text.toLowerCase());
+      }
+
+      renderHistory();
+    </script>
+  </body>
+</html>
